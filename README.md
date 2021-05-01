@@ -51,6 +51,29 @@ If you come from another language where printing to the console is less verbose,
 
 The `\` is just for line breaks in macros.
 
+## C++ is Not Type Safe
+
+Coming from Java, C#, or Swift you may be used to what are called type safe languages that offer guards against storing the wrong type of data into a data structure.
+
+Like its predecessor C, C++ does not do this. There are no guard rails. The criticism of non-type-safe languages is that they tend to lead to problems down the line where conversions happen implicitly and with unexpected results. Because of this it's important to know how implicit conversions work.
+
+[Here's a resource](https://en.cppreference.com/w/cpp/language/operator_arithmetic#Conversions) that describes the kinds of implicit conversions that happen in C++.
+
+Here's an examle. I've created a variable and I'd like to store a number in it. Here are 3 implicit conversions that might happen depending on how I write the code:
+
+```c++
+float myVariable;
+
+// No conversion. Float is stored as a float.
+myVariable = 1.0f;
+
+// Conversion from int to float. If either operand is a float, float always wins.
+myVariable = 1;
+
+// Conversion from double to float. Floating point numbers without an f at the end are doubles by default.
+myVariable = 1.0;
+```
+
 ## Header Files
 
 C++ takes all of our code and compiles it as if it were a single document. Because of this, it might be possible for multiple includes to duplicate dependencies. A great way of preventing this is using the following pattern:
@@ -139,3 +162,13 @@ inline T map(T value, T low1, T high1, T low2, T high2)
 `inline` means that it will compile fully wherever it is used. This can improve performance for some functions.
 
 `T` is the template syntax and will change to whatever type you put in. The limitation of this is that you can only use a single type in functions like this.
+
+## Ternary Operator
+
+It's often useful to use conditional boolean logic when assigning something. The ternary operator is good for this, though it can be difficult to remember and difficult to read. I like to use it, but the compiler would treat a simple if statement in the way, so it offers no performance enhancement.
+
+```
+<condition> ? <true-case-code> : <false-case-code>;
+```
+
+[Source](https://www.cprogramming.com/reference/operators/ternary-operator.html)
