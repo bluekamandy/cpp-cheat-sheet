@@ -74,6 +74,50 @@ myVariable = 1;
 myVariable = 1.0;
 ```
 
+## Setting Precision in Strings in C++ 
+
+A common activity in processing strings for debugging (or many other purposes) is setting precision of numbers. For example, say we wanted to divide 10 by 3. We know that the result is 3.333333... etc. But for the purpose of our program, we may only need to display two numbers after the decimal point.
+
+First we'll tackle the **non-C++20** method. [*Note*: I'll tackle the C++20 method at some point in the future.]
+
+In order to do this we'll need two inludes:
+
+```c++
+#include <iostream> // for input/output to the console
+#include <string> // for the standard library's string class.
+#include <sstream> // for the string stream class
+```
+
+The above would seem self-explanatory with the exception of a string *stream*. But what is a stream?
+
+> A C++  **stream** is a flow of data into or out of a program, such as the data written to cout or read from cin. ([Source](https://www.cs.uic.edu/~jbell/CourseNotes/CPlus/FileIO.html)) 
+
+Stringstreams have the benefit of allowing you to set precision **inline** as you write out a string. You can also specify the precision for an entire stringstream. If you're familiar with cout, a stringstream uses the same syntax, since both are C++ streams.
+
+```c++
+std::string dividePrecision2(float a, float b)
+{
+    float temp = a / b;
+    
+    std::stringstream result;
+
+    result.precision(2); // set precision for result variable 
+		
+  	// std::fixed allows us to set precision for just the
+  	// numbers after the decimal point. We are doing this
+  	// inline before we create our string.
+  
+    result << std::fixed << "Your result with a precision of 2 is " << temp + '\n';
+		
+  	// Because this function returns a string, we need to use
+  	// the .str() function to convert our stringstream into
+  	// a string.
+    return result.str();
+}
+```
+
+**Note on a C++ quirk:** In a C++ standard library string you have to cast numbers to strings. In a stream you do not.
+
 ## Header Files
 
 C++ takes all of our code and compiles it as if it were a single document. Because of this, it might be possible for multiple includes to duplicate dependencies. A great way of preventing this is using the following pattern:
