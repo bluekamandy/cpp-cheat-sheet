@@ -207,6 +207,75 @@ inline T map(T value, T low1, T high1, T low2, T high2)
 
 `T` is the template syntax and will change to whatever type you put in. The limitation of this is that you can only use a single type in functions like this.
 
+## Pass by Value, Pointer*, &Reference
+
+C++ gains much of its power from being able to control how data is shared and allocated at a very low level. This also makes it quite confusing to newcomers.
+
+There are three methods for passing data into objects or as function parameters:
+
+1. Pass by Value
+2. Pass by Pointer (`*`)
+3. Pass by Reference (`&`)
+
+Note: Passing by reference and by pointer are not the same thing.
+
+Much of this information comes from [an excellent article by Kevin Yang](https://medium.com/@misteryang/c-pass-by-value-pointer-reference-ddc3780d907c).
+
+### Pass by Value
+
+Passing by value generally works for small primitive data types, like `int`s, `float`s, `pointer`s, etc. It does not work well with large data types, like complex objects. The reason for this is that an entirely new copy is made whenever an argument is passed by value. If the objects you are copying are large, you are wasting space in memory.
+
+This is generally the first method that new programmers use and it is the easiest. 
+
+```c++
+// class declaration
+class Foo {};
+
+void PassByValue(Foo f, int n){
+  // Do something with f and n.
+}
+
+int main(){
+  Foo foo;
+  int i = 1;
+  PassByValue(foo, i);
+}
+```
+
+If you need to modify or *mutate* the original object within your function, this is not a good method to use because you will only be modifying a copy of the data.
+
+### Pass by Pointer
+
+A pointer is an address in memory where an object is stored. The object is then accessed with the dereferencing symbol (`*`).
+
+```c++
+class Foo {
+ public:
+  int data[100];
+};
+
+void PassByPointer(Foo* f, int n){
+  // Do something with *f and n.
+}
+
+int main(){
+  Foo foo;
+  int i = 0;
+  PassByPointer(&foo, i);
+  return 0;
+}
+```
+
+The `&` symbol means *address of*. In the definition of the function above, we are looking for a pointer to a `Foo` object. When we pass in a `Foo` object to our function in `main()`, we use the `&` symbol to only pass in the address of the object we already created.
+
+More TK.
+
+### Pass by Reference
+
+This section has information learned from [this video by The Cherno](https://www.youtube.com/watch?v=IzoFn3dfsPA).
+
+Passing by reference allows us to pass a reference to an object without using a pointer. It 
+
 ## Ternary Operator
 
 It's often useful to use conditional boolean logic when assigning something. The ternary operator is good for this, though it can be difficult to remember and difficult to read. I like to use it, but the compiler would treat a simple if statement in the way, so it offers no performance enhancement.
@@ -216,3 +285,44 @@ It's often useful to use conditional boolean logic when assigning something. The
 ```
 
 [Source](https://www.cprogramming.com/reference/operators/ternary-operator.html)
+
+## Random Numbers
+
+### Integers
+
+`rand() `- will generate a pseudorandom integer number between 0 and RAND_MAX. The way to limit it is with the `%` operator.
+
+```C++
+v1 = rand() % 100;         // v1 in the range 0 to 99
+v2 = rand() % 100 + 1;     // v2 in the range 1 to 100
+v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014 
+```
+
+([Source](https://www.cplusplus.com/reference/cstdlib/rand/))
+
+### Real Numbers AKA floats and doubles
+
+C++ cannot generate random real numbers directly. There is a library called <random> that can be included to add random number generation. I will eventually add documentation about that library. For now I include a quick and easy way of using rand() to generate floats:
+
+This will generate a number from 0.0 to 1.0, inclusive:
+
+```cpp
+float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+```
+
+This will generate a number from 0.0 to some arbitrary `float`, `X`:
+
+```cpp
+float r2 = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/X));
+```
+
+This will generate a number from some arbitrary `LO` to some arbitrary `HI`:
+
+```cpp
+float r3 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+```
+
+([Source](https://stackoverflow.com/questions/686353/random-float-number-generation))
+
+The <random> library is for when you need high quality random numbers. You can see documentation of it [here](https://www.cplusplus.com/reference/random/).
+
